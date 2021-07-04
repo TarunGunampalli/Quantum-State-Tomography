@@ -1,6 +1,6 @@
+import numpy as np
 from openpyxl import load_workbook
 from openpyxl.styles import Font
-import numpy as np
 
 
 def checkValidDensityMatrix(dm, input, probType):
