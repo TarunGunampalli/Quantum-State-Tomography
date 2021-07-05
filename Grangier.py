@@ -58,5 +58,5 @@ for detector in detections:
     col += 1
     ws[get_column_letter(col) + str(row)] = detector
 
-wb.save(filename="test.xlsx")
+wb.save(filename="Results.xlsx")
 wb.close()
