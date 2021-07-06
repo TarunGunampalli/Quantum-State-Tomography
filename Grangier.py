@@ -12,11 +12,11 @@ def find(name, path):
             return os.path.join(root, name)
 
 
-path = 'C:\\Users\\tarun\\Downloads\\'
+pathToParentFolder = 'C:\\Users\\tarun\\Downloads\\'
 folderName = "runs"
 numTrials = 5
 
-fullPath = path + folderName
+fullPath = pathToParentFolder + folderName
 
 wb = Workbook()
 
