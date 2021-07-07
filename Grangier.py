@@ -44,6 +44,7 @@ for run in runs:
         result = regex.search(text)
         strength = float(
             text[result.span()[0]+lengthOfSearch: result.span()[1]])
+        strength = round(strength, 2)
         if strength not in strengths:
             strengths[strength] = {}
 
@@ -68,7 +69,7 @@ for run in runs:
 
     # row += 1
 
-# print(strengths)
+# print(strengths[1.00])
 
 ws['A1'] = "Strength"
 col = 1
@@ -90,5 +91,5 @@ for strength in strengths:
 
     row += 1
 
-wb.save(filename="Results.xlsx")
+# wb.save(filename="Results.xlsx")
 wb.close()
