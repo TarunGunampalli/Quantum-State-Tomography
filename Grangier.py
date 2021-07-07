@@ -16,6 +16,10 @@ pathToParentFolder = 'C:\\Users\\tarun\\Downloads\\'
 folderName = "runs"
 numTrials = 5
 
+# data value to search for in config.txt
+searchExpression = "strength=.+?(?=,)"
+lengthOfSearch = 9
+
 fullPath = pathToParentFolder + folderName
 
 wb = Workbook()
@@ -36,9 +40,10 @@ for run in runs:
 
     with open(configFile, "r") as file:
         text = file.read()
-        regex = re.compile("strength=.+?(?=,)")
+        regex = re.compile(searchExpression)
         result = regex.search(text)
-        strength = float(text[result.span()[0]+9: result.span()[1]])
+        strength = float(
+            text[result.span()[0]+lengthOfSearch: result.span()[1]])
         if strength not in strengths:
             strengths[strength] = {}
 
