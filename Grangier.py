@@ -90,5 +90,5 @@ for strength in strengths:
 
     row += 1
 
-# wb.save(filename="Results.xlsx")
+wb.save(filename="Results.xlsx")
 wb.close()
