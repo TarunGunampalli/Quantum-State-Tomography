@@ -5,6 +5,27 @@ import re
 from openpyxl import Workbook
 from openpyxl.utils import get_column_letter
 
+######### VARIABLES TO CHANGE #########
+pathToParentFolder = 'C:\\Users\\tarun\\Downloads'
+folderName = "runs"
+
+# data value to search for in config.txt
+searchExpression = "optical_density=.+?(?=\n)"
+# "strength=.+?(?=,)"
+# "dark_count_rate=\d+?(?=\n)"
+lengthOfSearch = len("optical_density=")
+# len("strength=")
+# len("dark_count_rate=")
+
+
+def castValue(val):
+    return float(val)  # replace with type of the data value
+
+
+# title of independent variable
+title = "Optical Density"
+######### END VARIABLES TO CHANGE #########
+
 
 def find(name, path):
     for root, dirs, files in os.walk(path):
@@ -12,14 +33,7 @@ def find(name, path):
             return os.path.join(root, name)
 
 
-pathToParentFolder = 'C:\\Users\\tarun\\Downloads\\'
-folderName = "runs"
-
-# data value to search for in config.txt
-searchExpression = "reflectivity=.+?(?=\n)"
-lengthOfSearch = len("reflectivity=")
-
-fullPath = pathToParentFolder + folderName
+fullPath = f"{pathToParentFolder}\\{folderName}"
 
 wb = Workbook()
 
@@ -30,25 +44,24 @@ runs = os.listdir(fullPath)
 row = 2
 
 
-strengths = {}
+dcRates = {}
 
 for run in runs:
     col = 1
-    configFile = find("config.txt", fullPath + "\\" + run)
-    detFile = find("det.txt", fullPath + "\\" + run)
+    configFile = find("config.txt", f"{fullPath}\\{run}")
+    detFile = find("det.txt", f"{fullPath}\\{run}")
 
     with open(configFile, "r") as file:
         text = file.read()
         regex = re.compile(searchExpression)
         result = regex.search(text)
-        strength = float(
-            text[result.span()[0]+lengthOfSearch: result.span()[1]])
-        strength = round(strength, 2)
-        if strength not in strengths:
-            strengths[strength] = {}
+        dcRate = text[result.span()[0]+lengthOfSearch: result.span()[1]]
+        dcRate = castValue(dcRate)
+        if dcRate not in dcRates:
+            dcRates[dcRate] = {}
 
     with open(detFile, "r") as file:
-        detections = strengths[strength]
+        detections = dcRates[dcRate]
         lines = file.readlines()
         for line in lines:
             data = line.split(":")
@@ -68,20 +81,20 @@ for run in runs:
 
     # row += 1
 
-# print(strengths[1.00])
+# print(dcRates.keys())
 
-ws['A1'] = "Strength"
+ws['A1'] = title
 col = 1
-for detector in strengths[0.0]:
+for detector in dcRates[list(dcRates.keys())[0]]:
     col += 1
     ws[get_column_letter(col) + '1'] = detector
 
 
 row = 2
-for strength in strengths:
+for dcRate in dcRates:
     col = 1
-    ws[get_column_letter(col) + str(row)] = strength
-    allDetectors = strengths[strength]
+    ws[get_column_letter(col) + str(row)] = dcRate
+    allDetectors = dcRates[dcRate]
     for detector in allDetectors:
         col += 1
         dataLocation = get_column_letter(col) + str(row)
@@ -90,5 +103,5 @@ for strength in strengths:
 
     row += 1
 
-# wb.save(filename="Results.xlsx")
+wb.save(filename="Results.xlsx")
 wb.close()
