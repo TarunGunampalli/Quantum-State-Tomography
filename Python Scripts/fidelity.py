@@ -1,11 +1,11 @@
 import numpy as np
 
 
-polarization = np.radians(30)
-phaseDelay = np.radians(60)
-EZ = 0.099430222
-EX = 0.132862352
-EY = 0.157386698
+polarization = np.radians(45)
+phaseDelay = np.radians(0)
+EZ = 0.016048911
+EX = 0.197325857
+EY = -0.057913443
 
 I = np.matrix([[1, 0],
                [0, 1]])
