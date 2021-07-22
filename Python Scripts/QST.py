@@ -142,5 +142,5 @@ for sheet in sheets:
     ws = wb[sheet]
     calculateFidelities(ws)
 
-wb.save(filename="Quantum Compquting Research.xlsx")
+wb.save(filename="Quantum Computing Research.xlsx")
 wb.close()

@@ -19,6 +19,8 @@ folderName = "runs"
 searchExpression = "reflectivity=.+?(?=\n)"
 lengthOfSearch = len("reflectivity=")
 
+independentVariable = "Reflectivity"
+
 fullPath = pathToParentFolder + folderName
 
 wb = Workbook()
@@ -68,11 +70,11 @@ for run in runs:
 
     # row += 1
 
-# print(strengths[1.00])
+# print(strengths)
 
-ws['A1'] = "Strength"
+ws['A1'] = independentVariable
 col = 1
-for detector in strengths[0.0]:
+for detector in strengths[1]:
     col += 1
     ws[get_column_letter(col) + '1'] = detector
 
