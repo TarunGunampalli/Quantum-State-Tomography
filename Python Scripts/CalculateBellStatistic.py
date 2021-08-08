@@ -1,14 +1,31 @@
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter, column_index_from_string
 
+###############################################
+###############################################
+###############################################
+############# VARIABLES TO CHANGE #############
+###############################################
+###############################################
+###############################################
+
 pathToParentFolder = 'C:\\Users\\tarun\\OneDrive - The University of Texas at Austin\\Documents\\School\\CS 309\\Data\\'
 excelName = "Bell's Inequality.xlsx"
+sheetName = 'Expected Values'
+
+###############################################
+###############################################
+###############################################
+###############################################
+###############################################
+###############################################
+###############################################
 
 fullPath = pathToParentFolder + excelName
 
 wb = load_workbook(fullPath, data_only=True)
 
-ws = wb['Expected Values']
+ws = wb[sheetName]
 
 exColumn = column_index_from_string('T')
 
