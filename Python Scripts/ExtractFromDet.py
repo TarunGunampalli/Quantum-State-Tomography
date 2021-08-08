@@ -13,16 +13,22 @@ from openpyxl.utils import get_column_letter
 ###############################################
 ###############################################
 ###############################################
+
 pathToParentFolder = 'C:\\Users\\tarun\\Downloads\\'
 folderName = "runs"
 
 # data values to search for in config.txt
+# key is the name of the variable
+# value is a tuple
+# index 0 being the regex to search for in det.txt
+# index 1 is the length between the start of the regex and the position of the value
 variables = {
-    # 'angle': ("angle=.+?(?=\n)", len('angle=')),
-    'phase': ("phase=.+?(?=\n)", len('phase='))
+    'angle': ("angle=.+?(?=\n)", len('angle=')),
+    # 'phase': ("phase=.+?(?=\n)", len('phase='))
 }
 
 resultsFileName = '../Data/Results.xlsx'
+
 ###############################################
 ###############################################
 ###############################################
@@ -49,6 +55,8 @@ def find(name, path):
             return os.path.join(root, name)
 
 
+variableNames = []
+namesRead = False
 # Read inputs from config file and data from det.txt and add inputs and outputs to a dictionary
 for run in runs:
     col = 1
@@ -59,16 +67,29 @@ for run in runs:
         text = file.read()
         input = []
         for variable in variables:
+            if not namesRead:
+                variableNames.append(variable)
             searchExpression = variables[variable][0]
             length = variables[variable][1]
             regex = re.compile(searchExpression)
             result = regex.search(text)
-            input.append(float(
-                         text[result.span()[0]+length: result.span()[1]]))
+            numInstances = 1
+            while result:
+                textStart = result.span()[0]+length
+                textEnd = result.span()[1]
+                input.append(float(text[textStart: textEnd]))
+                # print(result)
+                text = text[textEnd:]
+                result = regex.search(text)
+                if numInstances > 1 and not namesRead:
+                    variableNames.append(variable + str(numInstances))
+                numInstances += 1
 
         input = tuple(input)
         if input not in inputs:
             inputs[input] = {}
+
+    namesRead = True
 
     with open(detFile, "r") as file:
         detections = inputs[input]
@@ -85,11 +106,11 @@ for run in runs:
 row = 1
 col = 1
 # add input names to excel sheet
-for variable in variables:
+for variable in variableNames:
     ws[get_column_letter(col) + str(row)] = variable
     col += 1
 
-col = len(variables)
+col = len(variableNames)
 # add detector combinations to excel sheet
 for detector in inputs[list(inputs.keys())[0]]:
     col += 1
